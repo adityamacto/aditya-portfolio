@@ -139,3 +139,13 @@ body{background:#020508}
 .control:hover{transform:none!important;filter:none!important;box-shadow:inset 0 1px #fff4,0 0 8px #0008!important;}
 .boot-status button:hover{color:#718892!important;}
 .email-link.email-flash{color:var(--cyan)!important;text-shadow:none!important;}
+
+/* OLED BLACK MODE */
+:root{--bg:#000!important;}
+html,body{background:#000!important;}
+body{background:#000!important;}
+#desktop{background:#000!important;}
+#grid{opacity:.045!important;}
+#scan{opacity:.12!important;}
+#ambient-terminal{background:#000!important;}
+#boot-screen{background:#000!important;}

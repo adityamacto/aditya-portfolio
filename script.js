@@ -261,3 +261,23 @@ document.getElementById('year').textContent=new Date().getFullYear();
  }
  for(let i=0;i<58;i++) setTimeout(addLine,i*24);
 })();
+
+/* Email fallback: reliably open the user's mail client from GitHub Pages. */
+document.addEventListener('click', function(e){
+  const link=e.target.closest('.email-link');
+  if(!link)return;
+  e.preventDefault();
+  const email='adityasachar380@gmail.com';
+  const mailto='mailto:'+email+'?subject='+encodeURIComponent('Portfolio Contact')+'&body='+encodeURIComponent('Hi Aditya,');
+  window.location.href=mailto;
+  setTimeout(function(){
+    if(document.visibilityState==='visible'){
+      const copied=window.navigator.clipboard?.writeText(email);
+      link.textContent='[ EMAIL COPIED ]';
+      link.classList.add('email-flash');
+      Promise.resolve(copied).finally(function(){
+        setTimeout(function(){link.textContent='[ EMAIL ]';link.classList.remove('email-flash')},2200);
+      });
+    }
+  },900);
+});

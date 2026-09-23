@@ -286,3 +286,14 @@ document.addEventListener('click', function(e){
     }
   },900);
 });
+
+
+/* Header name typing animation */
+document.addEventListener('DOMContentLoaded',()=>{
+  const el=document.getElementById('typing-name');
+  if(!el)return;
+  const name='ADITYA S ACHAR';
+  let i=0;
+  const type=()=>{ if(i<name.length){el.textContent+=name[i++];setTimeout(type,85);} };
+  type();
+});

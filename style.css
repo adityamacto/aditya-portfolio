@@ -164,3 +164,8 @@ body{background:#000!important;}
 .tab .dot,.tab.active .dot{box-shadow:none!important;}
 .brand,.content h1,.content h2,.email-link.email-flash{ text-shadow:none!important; }
 *{text-shadow:none!important;}
+
+
+/* Typing-name cursor */
+.typing-cursor{display:inline-block;color:var(--amber);margin-left:2px;animation:terminalBlink .75s steps(1,end) infinite}
+@keyframes terminalBlink{50%{opacity:0}}

@@ -171,3 +171,7 @@ body{background:#000!important;}
 @keyframes terminalBlink{50%{opacity:0}}
 
 
+
+
+/* REMOVE ANY LEGACY THEME SWITCH */
+#theme-toggle,#theme-toggle *,.theme-toggle,.theme-switch,.mode-toggle,.light-dark-toggle{display:none!important;visibility:hidden!important;pointer-events:none!important;}

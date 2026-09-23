@@ -215,3 +215,42 @@ document.getElementById('year').textContent=new Date().getFullYear();
   });
  });
 })();
+
+/* Ambient background shell: continuously simulates low-priority terminal activity behind the portfolio windows. */
+(function(){
+ const host=document.createElement('div');
+ host.id='ambient-terminal';
+ host.setAttribute('aria-hidden','true');
+ host.innerHTML='<div class="ambient-head">aditya@earth:~$ tail -f /var/log/portfolio-runtime.log</div><div id="ambient-stream"></div>';
+ document.getElementById('desktop').appendChild(host);
+ const stream=host.querySelector('#ambient-stream');
+ const commands=[
+  ['ml-runtime','loading feature batch','features=128','latency=18ms'],
+  ['rag-engine','embedding document chunk','vectors=768','status=ok'],
+  ['mcp-gateway','refreshing tool registry','tools=14','status=ready'],
+  ['postgres','querying experience_index','rows=24','status=ok'],
+  ['vector-db','nearest-neighbor search','k=8','score=0.91'],
+  ['api-gateway','GET /health','200','12ms'],
+  ['python','model inference','LightGBM','memory=42MB'],
+  ['docker','container heartbeat','portfolio-ui','healthy'],
+  ['git','checking workspace','branch=main','clean'],
+  ['security','token scope check','OAuth/PAT','passed'],
+  ['jenkins','pipeline status','build #184','success'],
+  ['jira','syncing issue metadata','issues=17','updated'],
+  ['servicenow','retrieving incidents','scope=read','complete'],
+  ['linux','process monitor','load=0.42','stable'],
+  ['system','render pipeline','fps=60','stable']
+ ];
+ let n=0;
+ function addLine(){
+   const [name,action,a,b]=commands[Math.floor(Math.random()*commands.length)];
+   const line=document.createElement('div'); line.className='ambient-line';
+   const time=new Date().toLocaleTimeString([], {hour12:false});
+   line.innerHTML='<span class="num">['+time+']</span> <span class="cmd">'+name+'</span> :: '+action+' <span class="ok">['+a+' | '+b+']</span>';
+   stream.appendChild(line); n++;
+   while(stream.children.length>13)stream.firstElementChild.remove();
+   setTimeout(()=>line.scrollIntoView({block:'nearest'}),0);
+   setTimeout(addLine,520+Math.random()*900);
+ }
+ for(let i=0;i<9;i++) setTimeout(addLine,i*180);
+})();

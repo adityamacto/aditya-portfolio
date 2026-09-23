@@ -149,3 +149,18 @@ body{background:#000!important;}
 #scan{opacity:.12!important;}
 #ambient-terminal{background:#000!important;}
 #boot-screen{background:#000!important;}
+
+/* STRICT OLED TERMINAL — pitch-black tabs, zero font glow */
+.tab,.tab:hover,.tab.active,.tab.dragging{
+  background:#000!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+  filter:none!important;
+}
+.tab{border-color:#26343a!important;color:#a9bac3!important;}
+.tab:hover{border-color:#3a4b52!important;color:#c2ccd1!important;}
+.tab.active{border-color:#53656d!important;color:#ffd166!important;}
+.tab .dot,.tab.active .dot{box-shadow:none!important;}
+.brand,.content h1,.content h2,.email-link.email-flash{ text-shadow:none!important; }
+*{text-shadow:none!important;}

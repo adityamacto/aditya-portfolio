@@ -169,3 +169,8 @@ body{background:#000!important;}
 /* Typing-name cursor */
 .typing-cursor{display:inline-block;color:var(--amber);margin-left:2px;animation:terminalBlink .75s steps(1,end) infinite}
 @keyframes terminalBlink{50%{opacity:0}}
+
+
+/* Theme toggle */
+.theme-toggle{margin-left:10px;padding:3px 7px;border:1px solid #33454d;background:#000;color:#9fb0b8;font:11px "Fira Code",monospace;cursor:pointer;border-radius:3px;text-shadow:none;box-shadow:none}.theme-toggle:hover{background:#111;color:#c7d2d8;box-shadow:none;text-shadow:none}
+body.light-mode{background:#f4f5f5!important;color:#172026!important}body.light-mode .window,body.light-mode .window .titlebar,body.light-mode .window .content,body.light-mode .window .card,body.light-mode .tab,body.light-mode .taskbar{background:#f4f5f5!important;color:#172026!important}body.light-mode .window{border-color:#9aa8ae!important}body.light-mode .titlebar{border-bottom-color:#aab5ba!important}body.light-mode .tab{border-color:#9aa8ae!important;color:#33434a!important}body.light-mode .tab.active{color:#7a5200!important;border-color:#7a5200!important}body.light-mode .theme-toggle{background:#fff;color:#27363d;border-color:#8d9aa0}

@@ -106,6 +106,11 @@ arrangeWindows();
 
 /* Tabs are draggable/reorderable, but still work as window launchers. */
 tabs.forEach(tab=>{
+  /* Mobile: tabs are a native horizontal scroll area, not draggable. */
+  if(window.matchMedia('(max-width:700px)').matches){
+    tab.addEventListener('click',()=>openWindow(tab.dataset.target));
+    return;
+  }
   let press=null;
   tab.addEventListener('click',()=>{
     if(tab.dataset.dragged==='1'){tab.dataset.dragged='0';return;}

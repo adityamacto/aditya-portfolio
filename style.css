@@ -59,34 +59,28 @@ body{background:#020508}
 /* AMBIENT BACKGROUND TERMINAL */
 #ambient-terminal{
   position:fixed;inset:0;width:100vw;height:100vh;overflow:hidden;z-index:0;pointer-events:none;
-  font:500 11px/1.85 "Fira Code",monospace;color:#47717b;opacity:.58;
-  padding:70px 4vw 45px;box-sizing:border-box;
-  mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 92%,transparent 100%);
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 92%,transparent 100%);
+  font:500 11px/1.85 "Fira Code",monospace;color:#547d86;opacity:.62;
+  padding:78px 3vw 30px;box-sizing:border-box;
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 5%,#000 95%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 5%,#000 95%,transparent 100%);
 }
-#ambient-terminal .ambient-head{color:#60949d;margin-bottom:8px;text-shadow:0 0 12px #45e9ff22}
-#ambient-terminal .ambient-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#ambient-terminal .ambient-line .cmd{color:#6599a3}
-#ambient-terminal .ambient-line .ok{color:#4b8875}
-#ambient-terminal .ambient-line .num{color:#58717a}
-#ambient-terminal .ambient-cursor{display:inline-block;width:6px;height:12px;background:#62f5ff;vertical-align:-2px;opacity:.65;animation:ambientBlink 1s steps(1) infinite}
-@keyframes ambientBlink{50%{opacity:0}}
-#ambient-terminal .ambient-head{color:#5d9aa4;margin-bottom:8px;text-shadow:0 0 12px #45e9ff22}
-#ambient-terminal .ambient-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#ambient-terminal .ambient-line .cmd{color:#75a9b2}
-#ambient-terminal .ambient-line .ok{color:#4d8b76}
-#ambient-terminal .ambient-line .num{color:#657c84}
-#ambient-terminal .ambient-cursor{display:inline-block;width:6px;height:12px;background:#62f5ff;vertical-align:-2px;opacity:.65;animation:ambientBlink 1s steps(1) infinite}
-@keyframes ambientBlink{50%{opacity:0}}
-@media(max-width:850px){
- #ambient-terminal{left:12px;bottom:18px;width:calc(100vw - 24px);height:150px;font-size:9px;opacity:.32}
+#ambient-terminal .ambient-head{color:#6a9da5;margin-bottom:10px;text-shadow:0 0 12px #45e9ff22}
+#ambient-terminal .ambient-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#ambient-terminal .ambient-line .cmd{color:#6d9fa8}
+#ambient-terminal .ambient-line .ok{color:#4f947c}
+#ambient-terminal .ambient-line .num{color:#607c84}
+#ambient-terminal #ambient-stream{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:3vw;row-gap:2px;
+  grid-column:1/-1;width:100%;
 }
-
-#ambient-terminal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:min-content;column-gap:8vw;row-gap:0;align-content:start}
 #ambient-terminal .ambient-head{grid-column:1/-1}
-#ambient-terminal #ambient-stream{display:grid;grid-template-columns:1fr 1fr;column-gap:8vw;grid-column:1/-1}
-#ambient-terminal .ambient-line{min-width:0}
+@media(max-width:1100px){
+ #ambient-terminal #ambient-stream{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 @media(max-width:850px){
- #ambient-terminal{padding:74px 14px 25px;font-size:8px;opacity:.25;grid-template-columns:1fr}
- #ambient-terminal #ambient-stream{grid-template-columns:1fr;column-gap:0}
+ #ambient-terminal{padding:72px 14px 24px;font-size:8px;opacity:.3}
+ #ambient-terminal #ambient-stream{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:3vw}
+}
+@media(max-width:520px){
+ #ambient-terminal #ambient-stream{grid-template-columns:1fr}
 }

@@ -130,3 +130,12 @@ body{background:#020508}
 
 .email-link{cursor:pointer}
 .email-link.email-flash{color:#67ffb0!important;text-shadow:0 0 14px rgba(103,255,176,.5)}
+
+/* TERMINAL MODE — no hover glow / no neon hover effects */
+.tab:hover,.links a:hover,.card:hover,.control:hover,.boot-status button:hover{transform:none!important;filter:none!important;box-shadow:inset 0 1px #ffffff0b!important;text-shadow:none!important;}
+.tab:hover{color:#a9bac3!important;border-color:rgba(112,215,235,0.34)!important;background:rgba(12,27,37,0.48)!important;}
+.links a:hover{background:#0c222c!important;border-color:#466271!important;}
+.card:hover{border-color:#3f6170!important;}
+.control:hover{transform:none!important;filter:none!important;box-shadow:inset 0 1px #fff4,0 0 8px #0008!important;}
+.boot-status button:hover{color:#718892!important;}
+.email-link.email-flash{color:var(--cyan)!important;text-shadow:none!important;}

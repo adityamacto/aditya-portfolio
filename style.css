@@ -55,3 +55,23 @@ body{background:#020508}
 
 .control.drop-zone{transform:scale(1.55);box-shadow:0 0 0 5px #62f5ff33,0 0 22px #62f5ff88!important}
 .tab.dragging{cursor:grabbing!important;filter:brightness(1.25);box-shadow:0 15px 35px #0009,0 0 25px #62f5ff22!important}
+
+/* AMBIENT BACKGROUND TERMINAL */
+#ambient-terminal{
+  position:absolute;left:3.5vw;bottom:5vh;width:min(35vw,520px);height:min(58vh,560px);
+  overflow:hidden;z-index:2;pointer-events:none;
+  font:500 11px/1.8 "Fira Code",monospace;
+  color:#4e7580;opacity:.72;
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 12%,#000 82%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 12%,#000 82%,transparent 100%);
+}
+#ambient-terminal .ambient-head{color:#5d9aa4;margin-bottom:8px;text-shadow:0 0 12px #45e9ff22}
+#ambient-terminal .ambient-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ambient-terminal .ambient-line .cmd{color:#75a9b2}
+#ambient-terminal .ambient-line .ok{color:#4d8b76}
+#ambient-terminal .ambient-line .num{color:#657c84}
+#ambient-terminal .ambient-cursor{display:inline-block;width:6px;height:12px;background:#62f5ff;vertical-align:-2px;opacity:.65;animation:ambientBlink 1s steps(1) infinite}
+@keyframes ambientBlink{50%{opacity:0}}
+@media(max-width:850px){
+ #ambient-terminal{left:12px;bottom:18px;width:calc(100vw - 24px);height:150px;font-size:9px;opacity:.32}
+}

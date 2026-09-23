@@ -241,16 +241,14 @@ document.getElementById('year').textContent=new Date().getFullYear();
   ['linux','process monitor','load=0.42','stable'],
   ['system','render pipeline','fps=60','stable']
  ];
- let n=0;
  function addLine(){
    const [name,action,a,b]=commands[Math.floor(Math.random()*commands.length)];
    const line=document.createElement('div'); line.className='ambient-line';
    const time=new Date().toLocaleTimeString([], {hour12:false});
    line.innerHTML='<span class="num">['+time+']</span> <span class="cmd">'+name+'</span> :: '+action+' <span class="ok">['+a+' | '+b+']</span>';
-   stream.appendChild(line); n++;
-   while(stream.children.length>13)stream.firstElementChild.remove();
-   setTimeout(()=>line.scrollIntoView({block:'nearest'}),0);
-   setTimeout(addLine,520+Math.random()*900);
+   stream.appendChild(line);
+   while(stream.children.length>34)stream.firstElementChild.remove();
+   setTimeout(addLine,420+Math.random()*700);
  }
- for(let i=0;i<9;i++) setTimeout(addLine,i*180);
+ for(let i=0;i<24;i++) setTimeout(addLine,i*75);
 })();

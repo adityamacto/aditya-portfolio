@@ -106,43 +106,35 @@ arrangeWindows();
 
 /* Tabs are draggable/reorderable, but still work as window launchers. */
 tabs.forEach(tab=>{
+  let press=null;
   tab.addEventListener('click',()=>{
     if(tab.dataset.dragged==='1'){tab.dataset.dragged='0';return;}
     openWindow(tab.dataset.target);
   });
   tab.addEventListener('pointerdown',e=>{
-    dragTab={tab,startX:e.clientX,startY:e.clientY,moved:false};
+    press={x:e.clientX,y:e.clientY,moved:false};
     tab.setPointerCapture(e.pointerId);
   });
   tab.addEventListener('pointermove',e=>{
-    if(!dragTab||dragTab.tab!==tab)return;
-    if(Math.hypot(e.clientX-dragTab.startX,e.clientY-dragTab.startY)>7){
-      dragTab.moved=true;
-      tab.dataset.dragged='1';
-      tab.classList.add('dragging');
-      const siblings=[...document.querySelectorAll('.tab')].filter(x=>x!==tab);
-      siblings.forEach(x=>x.classList.remove('drop-target'));
-      const target=siblings.find(x=>{
-        const r=x.getBoundingClientRect();
-        return e.clientX<r.left+r.width/2;
-      });
-      if(target)target.classList.add('drop-target');
-      else if(siblings.length)siblings[siblings.length-1].classList.add('drop-target');
-    }
+    if(!press)return;
+    if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>8)press.moved=true;
+    if(!press.moved)return;
+    tab.dataset.dragged='1';
+    tab.classList.add('dragging');
+    const all=[...document.querySelectorAll('.tab')].filter(x=>x!==tab);
+    all.forEach(x=>x.classList.remove('drop-target'));
+    const target=all.find(x=>{const r=x.getBoundingClientRect();return e.clientX<r.left+r.width/2});
+    (target||all[all.length-1])?.classList.add('drop-target');
   });
   tab.addEventListener('pointerup',e=>{
-    if(!dragTab||dragTab.tab!==tab)return;
-    const siblings=[...document.querySelectorAll('.tab')].filter(x=>x!==tab);
-    if(dragTab.moved){
-      const target=siblings.find(x=>{
-        const r=x.getBoundingClientRect();
-        return e.clientX<r.left+r.width/2;
-      });
-      if(target)target.parentNode.insertBefore(tab,target);
-      else tab.parentNode.appendChild(tab);
+    if(!press)return;
+    if(press.moved){
+      const all=[...document.querySelectorAll('.tab')].filter(x=>x!==tab);
+      const target=all.find(x=>{const r=x.getBoundingClientRect();return e.clientX<r.left+r.width/2});
+      if(target)target.parentNode.insertBefore(tab,target);else tab.parentNode.appendChild(tab);
     }
-    tabs.forEach(x=>x.classList.remove('dragging','drop-target'));
-    dragTab=null;
+    tab.classList.remove('dragging');document.querySelectorAll('.drop-target').forEach(x=>x.classList.remove('drop-target'));
+    press=null;
   });
 });
 
@@ -200,3 +192,26 @@ function runBoot(){
 document.getElementById('skip-boot').addEventListener('click',finishBoot);
 runBoot();
 document.getElementById('year').textContent=new Date().getFullYear();
+
+/* Drag a tab vertically onto the window controls: drop on minimize/maximize zones. */
+(function(){
+ const tabs2=[...document.querySelectorAll('.tab')];
+ tabs2.forEach(tab=>{
+  tab.addEventListener('pointermove',e=>{
+   if(tab.dataset.dragged!=='1')return;
+   const w=document.getElementById(tab.dataset.target); if(!w)return;
+   const max=w.querySelector('[data-action="maximize"]'), min=w.querySelector('[data-action="minimize"]');
+   [max,min].forEach(x=>x?.classList.remove('drop-zone'));
+   const hit=document.elementFromPoint(e.clientX,e.clientY);
+   const ctrl=hit?.closest('.control');
+   if(ctrl&&(ctrl.dataset.action==='maximize'||ctrl.dataset.action==='minimize'))ctrl.classList.add('drop-zone');
+  });
+  tab.addEventListener('pointerup',e=>{
+   const w=document.getElementById(tab.dataset.target);if(!w)return;
+   const hit=document.elementFromPoint(e.clientX,e.clientY),ctrl=hit?.closest('.control');
+   if(ctrl?.dataset.action==='maximize')maximizeWindow(w);
+   if(ctrl?.dataset.action==='minimize')minimizeWindow(w);
+   document.querySelectorAll('.drop-zone').forEach(x=>x.classList.remove('drop-zone'));
+  });
+ });
+})();

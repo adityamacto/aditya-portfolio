@@ -127,3 +127,6 @@ body{background:#020508}
   background:rgba(38,70,82,0.64)!important;
   background-color:rgba(38,70,82,0.64)!important;
 }
+
+.email-link{cursor:pointer}
+.email-link.email-flash{color:#67ffb0!important;text-shadow:0 0 14px rgba(103,255,176,.5)}

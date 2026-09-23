@@ -12,3 +12,14 @@
 .exp-grid{margin-top:18px}.project h2{min-height:42px}.footer{position:absolute;bottom:6px;left:22px;color:#536a74;font-size:9px;z-index:40}
 #boot-screen{position:fixed;inset:0;z-index:100;background:#030609;display:flex;align-items:center;justify-content:center;color:#cbd6dc;font-family:"Fira Code",monospace;transition:opacity .5s ease,visibility .5s ease}#boot-screen.done{opacity:0;visibility:hidden}.boot-wrap{width:min(850px,90vw);padding:28px;border:1px solid #25404f;background:#071018;box-shadow:0 0 80px #000}.boot-title{color:#d8e1e6;margin-bottom:18px}.boot-title .green{color:var(--green)}#boot-log{min-height:220px;font-size:12px;line-height:1.9;white-space:pre-wrap}.boot-line.ok{color:var(--green)}.boot-line.info{color:#a9bac3}.boot-line.warn{color:var(--amber)}.boot-progress{height:8px;border:1px solid #274451;margin:16px 0;background:#050b10}.boot-progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .2s}.boot-status{display:flex;justify-content:space-between;align-items:center;color:#718892;font-size:10px}.boot-status button{background:none;border:0;color:#718892;font:inherit;cursor:pointer}.boot-status button:hover{color:var(--amber)}
 @media(max-width:850px){.topbar{padding:0 14px}.brand{font-size:28px}.status{font-size:10px}.content{padding:30px 28px}.grid2{grid-template-columns:1fr}.window{width:calc(100vw - 32px);height:calc(100vh - 160px)}}
+
+/* Interactive terminal desktop v5 */
+.window{display:block;opacity:1;transform:none;transition:box-shadow .18s ease,opacity .18s ease}
+.window:not(.hidden){animation:windowIn .22s ease}
+.window.hidden{display:none!important}
+@keyframes windowIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.window.focused{box-shadow:0 30px 90px #000c,0 0 0 1px #6c8795,0 0 35px #35d9e422}
+.window.maximized{left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important;border-radius:0}
+.window.minimizing{opacity:0;transform:scale(.96);pointer-events:none}
+.tab.dragging{opacity:.72;transform:translateY(-5px) scale(1.04)!important;z-index:100}
+.tab.drop-target{border-color:var(--cyan);box-shadow:0 0 18px #5ce1e633}

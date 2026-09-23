@@ -103,23 +103,27 @@ body{background:#020508}
   #ambient-terminal #ambient-stream{height:calc(100vh - 112px)}
 }
 
-/* Translucent glass tabs */
+
+/* GLASS TABS - explicit translucent layer */
 .tab{
-  background:rgba(17,32,42,.58) !important;
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border-color:rgba(112,215,235,.28);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 24px rgba(0,0,0,.12);
+  background:rgba(12,27,37,0.48)!important;
+  background-color:rgba(12,27,37,0.48)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(125%)!important;
+  backdrop-filter:blur(12px) saturate(125%)!important;
+  border:1px solid rgba(112,215,235,0.34)!important;
+  border-bottom:1px solid rgba(112,215,235,0.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 8px 24px rgba(0,0,0,0.16)!important;
 }
 .tab:hover{
-  background:rgba(28,52,64,.68) !important;
-  border-color:rgba(112,215,235,.48);
+  background:rgba(25,48,61,0.55)!important;
+  background-color:rgba(25,48,61,0.55)!important;
 }
 .tab.active{
-  background:rgba(30,57,70,.62) !important;
-  border-color:rgba(112,235,255,.72);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 0 18px rgba(72,220,255,.08);
+  background:rgba(27,57,69,0.58)!important;
+  background-color:rgba(27,57,69,0.58)!important;
+  border-color:rgba(114,234,242,0.72)!important;
 }
 .tab.dragging{
-  background:rgba(38,70,82,.72) !important;
+  background:rgba(38,70,82,0.64)!important;
+  background-color:rgba(38,70,82,0.64)!important;
 }

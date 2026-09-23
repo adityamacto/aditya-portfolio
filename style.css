@@ -58,13 +58,19 @@ body{background:#020508}
 
 /* AMBIENT BACKGROUND TERMINAL */
 #ambient-terminal{
-  position:absolute;left:3.5vw;bottom:5vh;width:min(35vw,520px);height:min(58vh,560px);
-  overflow:hidden;z-index:2;pointer-events:none;
-  font:500 11px/1.8 "Fira Code",monospace;
-  color:#4e7580;opacity:.72;
-  mask-image:linear-gradient(to bottom,transparent 0%,#000 12%,#000 82%,transparent 100%);
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 12%,#000 82%,transparent 100%);
+  position:fixed;inset:0;width:100vw;height:100vh;overflow:hidden;z-index:0;pointer-events:none;
+  font:500 11px/1.85 "Fira Code",monospace;color:#47717b;opacity:.58;
+  padding:70px 4vw 45px;box-sizing:border-box;
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 92%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 92%,transparent 100%);
 }
+#ambient-terminal .ambient-head{color:#60949d;margin-bottom:8px;text-shadow:0 0 12px #45e9ff22}
+#ambient-terminal .ambient-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ambient-terminal .ambient-line .cmd{color:#6599a3}
+#ambient-terminal .ambient-line .ok{color:#4b8875}
+#ambient-terminal .ambient-line .num{color:#58717a}
+#ambient-terminal .ambient-cursor{display:inline-block;width:6px;height:12px;background:#62f5ff;vertical-align:-2px;opacity:.65;animation:ambientBlink 1s steps(1) infinite}
+@keyframes ambientBlink{50%{opacity:0}}
 #ambient-terminal .ambient-head{color:#5d9aa4;margin-bottom:8px;text-shadow:0 0 12px #45e9ff22}
 #ambient-terminal .ambient-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #ambient-terminal .ambient-line .cmd{color:#75a9b2}
@@ -74,4 +80,13 @@ body{background:#020508}
 @keyframes ambientBlink{50%{opacity:0}}
 @media(max-width:850px){
  #ambient-terminal{left:12px;bottom:18px;width:calc(100vw - 24px);height:150px;font-size:9px;opacity:.32}
+}
+
+#ambient-terminal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:min-content;column-gap:8vw;row-gap:0;align-content:start}
+#ambient-terminal .ambient-head{grid-column:1/-1}
+#ambient-terminal #ambient-stream{display:grid;grid-template-columns:1fr 1fr;column-gap:8vw;grid-column:1/-1}
+#ambient-terminal .ambient-line{min-width:0}
+@media(max-width:850px){
+ #ambient-terminal{padding:74px 14px 25px;font-size:8px;opacity:.25;grid-template-columns:1fr}
+ #ambient-terminal #ambient-stream{grid-template-columns:1fr;column-gap:0}
 }

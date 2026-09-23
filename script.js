@@ -299,9 +299,3 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 
-/* Light / dark mode toggle */
-document.addEventListener('DOMContentLoaded',()=>{
- const b=document.getElementById('theme-toggle'); if(!b)return;
- const saved=localStorage.getItem('portfolio-theme'); if(saved==='light')document.body.classList.add('light-mode');
- b.addEventListener('click',()=>{const light=document.body.classList.toggle('light-mode');localStorage.setItem('portfolio-theme',light?'light':'dark');});
-});

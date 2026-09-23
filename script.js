@@ -1,104 +1,202 @@
-const tabs=[...document.querySelectorAll('.tab')],wins=[...document.querySelectorAll('.window')],desktop=document.getElementById('desktop');
-let z=20, dragging=null, tabDragging=null;
+/* INTERACTIVE_TERMINAL_V5 */
+const tabs=[...document.querySelectorAll('.tab')];
+const wins=[...document.querySelectorAll('.window')];
+const desktop=document.getElementById('desktop');
+const stage=document.querySelector('.windows');
+let z=30;
+let dragWindow=null;
+let dragTab=null;
 
-function bringToFront(w){z+=1;w.style.zIndex=z}
-function activate(id,focus=true){
-  const w=document.getElementById(id); if(!w)return;
-  tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));
-  wins.forEach(x=>x.classList.toggle('active',x===w && !x.classList.contains('hidden')));
-  w.classList.remove('hidden');
-  bringToFront(w);
-  if(focus) history.replaceState(null,'','#'+id);
+function bringToFront(w){
+  z+=1;
+  w.style.zIndex=z;
+  wins.forEach(x=>x.classList.remove('focused'));
+  w.classList.add('focused');
 }
-function hideWindow(w){w.classList.add('hidden');w.classList.remove('active');}
-function toggleMaximize(w){
+function openWindow(id){
+  const w=document.getElementById(id);
+  if(!w)return;
+  w.classList.remove('hidden','minimizing');
+  bringToFront(w);
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));
+}
+function closeWindow(w){
+  w.classList.add('minimizing');
+  setTimeout(()=>w.classList.add('hidden'),170);
+  const next=wins.find(x=>x!==w&&!x.classList.contains('hidden'));
+  if(next)bringToFront(next);
+}
+function minimizeWindow(w){
+  closeWindow(w);
+}
+function maximizeWindow(w){
   if(w.classList.contains('maximized')){
     w.classList.remove('maximized');
-    const s=w.dataset.restore;
-    if(s){const o=JSON.parse(s);w.style.left=o.left;w.style.top=o.top;w.style.width=o.width;w.style.height=o.height;w.style.transform='none';}
+    const r=w.dataset.restore;
+    if(r){
+      const o=JSON.parse(r);
+      Object.assign(w.style,{left:o.left,top:o.top,width:o.width,height:o.height});
+    }
   }else{
-    const r=w.getBoundingClientRect(), c=document.querySelector('.windows').getBoundingClientRect();
-    w.dataset.restore=JSON.stringify({left:(r.left-c.left)+'px',top:(r.top-c.top)+'px',width:r.width+'px',height:r.height+'px'});
+    const r=w.getBoundingClientRect(), c=stage.getBoundingClientRect();
+    w.dataset.restore=JSON.stringify({
+      left:(r.left-c.left)+'px',top:(r.top-c.top)+'px',
+      width:r.width+'px',height:r.height+'px'
+    });
     w.classList.add('maximized');
   }
   bringToFront(w);
 }
-function centerFresh(w){w.style.left='50%';w.style.top='50%';w.style.width='';w.style.height='';w.style.transform='translate(-50%,-50%)'}
-wins.forEach((w,i)=>{w.dataset.restore='';if(i) w.classList.remove('active'); w.addEventListener('pointerdown',()=>bringToFront(w));});
-
-document.querySelectorAll('.traffic').forEach(group=>group.addEventListener('pointerdown',e=>e.stopPropagation()));
-document.querySelectorAll('.control').forEach(btn=>btn.addEventListener('click',e=>{
-  e.stopPropagation();const w=btn.closest('.window'),a=btn.dataset.action;
-  if(a==='close'){hideWindow(w);}
-  if(a==='minimize'){hideWindow(w);}
-  if(a==='maximize'){w.classList.remove('hidden','active');activate(w.id,false);toggleMaximize(w);}
-}));
-
-document.querySelectorAll('.titlebar').forEach(bar=>{
-  let moved=false;
-  bar.addEventListener('dblclick',e=>{if(!e.target.closest('.traffic'))toggleMaximize(bar.closest('.window'));});
-  bar.addEventListener('pointerdown',e=>{
-    if(e.target.closest('.traffic'))return;
-    const w=bar.closest('.window'); if(w.classList.contains('maximized'))return;
-    bringToFront(w);
-    const c=document.querySelector('.windows').getBoundingClientRect(),r=w.getBoundingClientRect();
-    const ox=e.clientX-r.left,oy=e.clientY-r.top;
-    w.style.transform='none'; w.style.left=(r.left-c.left)+'px';w.style.top=(r.top-c.top)+'px';
-    moved=true; bar.setPointerCapture(e.pointerId);
-    const move=ev=>{
-      if(!moved)return;
-      w.style.left=Math.max(-w.offsetWidth+80,Math.min(c.width-80,ev.clientX-c.left-ox))+'px';
-      w.style.top=Math.max(0,Math.min(c.height-42,ev.clientY-c.top-oy))+'px';
-    };
-    const up=()=>{moved=false;bar.removeEventListener('pointermove',move);bar.removeEventListener('pointerup',up)};
-    bar.addEventListener('pointermove',move);bar.addEventListener('pointerup',up,{once:true});
-  });
-});
-
-tabs.forEach(t=>{
-  t.addEventListener('click',()=>{if(t.dataset.moved==='1'){t.dataset.moved='0';return}activate(t.dataset.target)});
-  t.addEventListener('pointerdown',e=>{
-    tabDragging={t,startX:e.clientX,startY:e.clientY,lastX:e.clientX,moved:false};
-    t.setPointerCapture(e.pointerId);
-  });
-  t.addEventListener('pointermove',e=>{
-    if(!tabDragging||tabDragging.t!==t)return;
-    const dx=e.clientX-tabDragging.startX,dy=e.clientY-tabDragging.startY;
-    if(Math.abs(dx)>7||Math.abs(dy)>7)tabDragging.moved=true;
-    if(tabDragging.moved){t.dataset.moved='1';t.style.transform='translateY(-3px) scale(1.02)';}
-  });
-  t.addEventListener('pointerup',e=>{
-    if(!tabDragging||tabDragging.t!==t)return;
-    t.style.transform='';const x=e.clientX, others=[...document.querySelectorAll('.tab')].filter(a=>a!==t);
-    if(tabDragging.moved){
-      let placed=false;
-      for(const o of others){const r=o.getBoundingClientRect();if(x<r.left+r.width/2){o.parentNode.insertBefore(t,o);placed=true;break}}
-      if(!placed)t.parentNode.appendChild(t);
-    }
-    tabDragging=null;
-  });
-});
-
-window.addEventListener('resize',()=>wins.filter(w=>w.classList.contains('maximized')).forEach(w=>bringToFront(w)));
-
-const bootLines=[
-  ['info','[  OK  ] powering up terminal shell'],
-  ['info','[  OK  ] mounting /portfolio filesystem'],
-  ['ok','[  OK  ] loading python.ml.rag.mcp modules'],
-  ['ok','[  OK  ] connecting enterprise adapters: ServiceNow / Jira / Jenkins'],
-  ['ok','[  OK  ] indexing project catalog'],
-  ['ok','[  OK  ] loading experience.log'],
-  ['warn','[ RUN ] starting graphical shell...'],
-  ['ok','[  OK  ] ADITYA S ACHAR portfolio ready']
-];
-let bi=0, skip=false;
-const bootLog=document.getElementById('boot-log'),bar=document.getElementById('boot-bar'),status=document.getElementById('boot-status'),boot=document.getElementById('boot-screen');
-function finishBoot(){if(skip)return;skip=true;bar.style.width='100%';status.textContent='launching portfolio...';desktop.classList.add('ready');setTimeout(()=>{boot.classList.add('done');activate(location.hash?location.hash.slice(1):'about',false)},450)}
-function nextBoot(){
-  if(skip)return;
-  if(bi<bootLines.length){const [kind,text]=bootLines[bi++],p=document.createElement('div');p.className='boot-line '+kind;p.textContent=text;bootLog.appendChild(p);bar.style.width=Math.round((bi/bootLines.length)*92)+'%';status.textContent=bi<bootLines.length?'running startup sequence...':'finalizing...';setTimeout(nextBoot,260+Math.random()*260)}
-  else setTimeout(finishBoot,450);
+function resetPosition(w,left,top,width,height){
+  Object.assign(w.style,{left,top,width,height,transform:'none'});
 }
-document.getElementById('skip-boot').addEventListener('click',()=>{skip=false;finishBoot()});
-nextBoot();
+
+wins.forEach((w,i)=>{
+  w.classList.add('hidden');
+  w.addEventListener('pointerdown',()=>bringToFront(w));
+  w.querySelectorAll('.control').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const action=btn.dataset.action;
+      if(action==='close')closeWindow(w);
+      if(action==='minimize')minimizeWindow(w);
+      if(action==='maximize'){w.classList.remove('hidden');maximizeWindow(w);}
+    });
+  });
+
+  const bar=w.querySelector('.titlebar');
+  bar.addEventListener('dblclick',e=>{
+    if(!e.target.closest('.traffic'))maximizeWindow(w);
+  });
+  bar.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.traffic')||w.classList.contains('maximized'))return;
+    bringToFront(w);
+    const c=stage.getBoundingClientRect(),r=w.getBoundingClientRect();
+    const ox=e.clientX-r.left,oy=e.clientY-r.top;
+    resetPosition(w,(r.left-c.left)+'px',(r.top-c.top)+'px',r.width+'px',r.height+'px');
+    bar.setPointerCapture(e.pointerId);
+    const move=ev=>{
+      const maxX=c.width-90,maxY=c.height-45;
+      w.style.left=Math.max(-w.offsetWidth+90,Math.min(maxX,ev.clientX-c.left-ox))+'px';
+      w.style.top=Math.max(0,Math.min(maxY,ev.clientY-c.top-oy))+'px';
+    };
+    const up=()=>{
+      bar.removeEventListener('pointermove',move);
+      bar.removeEventListener('pointerup',up);
+    };
+    bar.addEventListener('pointermove',move);
+    bar.addEventListener('pointerup',up,{once:true});
+  });
+});
+
+/* Give each terminal window its own desktop position. */
+function arrangeWindows(){
+  const positions=[
+    ['6%', '5%', '62%', '78%'],
+    ['15%', '12%', '66%', '76%'],
+    ['24%', '19%', '68%', '74%'],
+    ['33%', '26%', '64%', '70%']
+  ];
+  wins.forEach((w,i)=>{
+    const p=positions[i];
+    resetPosition(w,p[0],p[1],p[2],p[3]);
+  });
+}
+arrangeWindows();
+
+/* Tabs are draggable/reorderable, but still work as window launchers. */
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    if(tab.dataset.dragged==='1'){tab.dataset.dragged='0';return;}
+    openWindow(tab.dataset.target);
+  });
+  tab.addEventListener('pointerdown',e=>{
+    dragTab={tab,startX:e.clientX,startY:e.clientY,moved:false};
+    tab.setPointerCapture(e.pointerId);
+  });
+  tab.addEventListener('pointermove',e=>{
+    if(!dragTab||dragTab.tab!==tab)return;
+    if(Math.hypot(e.clientX-dragTab.startX,e.clientY-dragTab.startY)>7){
+      dragTab.moved=true;
+      tab.dataset.dragged='1';
+      tab.classList.add('dragging');
+      const siblings=[...document.querySelectorAll('.tab')].filter(x=>x!==tab);
+      siblings.forEach(x=>x.classList.remove('drop-target'));
+      const target=siblings.find(x=>{
+        const r=x.getBoundingClientRect();
+        return e.clientX<r.left+r.width/2;
+      });
+      if(target)target.classList.add('drop-target');
+      else if(siblings.length)siblings[siblings.length-1].classList.add('drop-target');
+    }
+  });
+  tab.addEventListener('pointerup',e=>{
+    if(!dragTab||dragTab.tab!==tab)return;
+    const siblings=[...document.querySelectorAll('.tab')].filter(x=>x!==tab);
+    if(dragTab.moved){
+      const target=siblings.find(x=>{
+        const r=x.getBoundingClientRect();
+        return e.clientX<r.left+r.width/2;
+      });
+      if(target)target.parentNode.insertBefore(tab,target);
+      else tab.parentNode.appendChild(tab);
+    }
+    tabs.forEach(x=>x.classList.remove('dragging','drop-target'));
+    dragTab=null;
+  });
+});
+
+/* On small screens, keep windows fluid and centered when first opened. */
+window.addEventListener('resize',()=>{
+  wins.filter(w=>w.classList.contains('maximized')).forEach(bringToFront);
+});
+
+/* Boot sequence */
+const bootLines=[
+  ['info','[  OK  ] BIOS :: terminal interface detected'],
+  ['info','[  OK  ] mounting /aditya-portfolio'],
+  ['ok','[  OK  ] loading Python ML runtime'],
+  ['ok','[  OK  ] loading RAG + vector search modules'],
+  ['ok','[  OK  ] initializing MCP enterprise connectors'],
+  ['ok','[  OK  ] checking ServiceNow / Jira / Jenkins adapters'],
+  ['ok','[  OK  ] indexing experience.log'],
+  ['ok','[  OK  ] indexing projects/'],
+  ['info','[ RUN ] starting interactive desktop shell...'],
+  ['ok','[  OK  ] portfolio environment ready']
+];
+let bootIndex=0;
+let bootFinished=false;
+const bootLog=document.getElementById('boot-log');
+const bootBar=document.getElementById('boot-bar');
+const bootStatus=document.getElementById('boot-status');
+const bootScreen=document.getElementById('boot-screen');
+
+function finishBoot(){
+  if(bootFinished)return;
+  bootFinished=true;
+  bootBar.style.width='100%';
+  bootStatus.textContent='launching interactive portfolio...';
+  desktop.classList.add('ready');
+  setTimeout(()=>{
+    bootScreen.classList.add('done');
+    openWindow('about');
+  },500);
+}
+function runBoot(){
+  if(bootFinished)return;
+  if(bootIndex<bootLines.length){
+    const [kind,msg]=bootLines[bootIndex++];
+    const line=document.createElement('div');
+    line.className='boot-line '+kind;
+    line.textContent=msg;
+    bootLog.appendChild(line);
+    bootBar.style.width=Math.round((bootIndex/bootLines.length)*100)+'%';
+    bootStatus.textContent=bootIndex<bootLines.length?'executing startup commands...':'finalizing shell...';
+    setTimeout(runBoot,210+Math.random()*180);
+  }else{
+    setTimeout(finishBoot,450);
+  }
+}
+document.getElementById('skip-boot').addEventListener('click',finishBoot);
+runBoot();
 document.getElementById('year').textContent=new Date().getFullYear();

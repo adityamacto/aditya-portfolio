@@ -216,7 +216,7 @@ document.getElementById('year').textContent=new Date().getFullYear();
  });
 })();
 
-/* Ambient background shell: continuously simulates low-priority terminal activity behind the portfolio windows. */
+/* Ambient background shell: ONE continuous full-screen terminal stream. */
 (function(){
  const host=document.createElement('div');
  host.id='ambient-terminal';
@@ -239,16 +239,25 @@ document.getElementById('year').textContent=new Date().getFullYear();
   ['jira','syncing issue metadata','issues=17','updated'],
   ['servicenow','retrieving incidents','scope=read','complete'],
   ['linux','process monitor','load=0.42','stable'],
-  ['system','render pipeline','fps=60','stable']
+  ['system','render pipeline','fps=60','stable'],
+  ['aws','checking cloud service','region=ap-south-1','healthy'],
+  ['python','running inference worker','queue=03','ready'],
+  ['uvicorn','request handler','workers=4','active'],
+  ['embedding','vector index refresh','chunks=64','complete']
  ];
- function addLine(){
-   const [name,action,a,b]=commands[Math.floor(Math.random()*commands.length)];
-   const line=document.createElement('div'); line.className='ambient-line';
-   const time=new Date().toLocaleTimeString([], {hour12:false});
-   line.innerHTML='<span class="num">['+time+']</span> <span class="cmd">'+name+'</span> :: '+action+' <span class="ok">['+a+' | '+b+']</span>';
-   stream.appendChild(line);
-   while(stream.children.length>120)stream.firstElementChild.remove();
-   setTimeout(addLine,420+Math.random()*700);
+ function pick(){
+   return commands[Math.floor(Math.random()*commands.length)];
  }
- for(let i=0;i<96;i++) setTimeout(addLine,i*28);
+ function addLine(){
+   const line=document.createElement('div');
+   line.className='ambient-line';
+   const [name,action,a,b]=pick();
+   const [name2,action2,a2,b2]=pick();
+   const time=new Date().toLocaleTimeString([], {hour12:false});
+   line.innerHTML='<span class="num">['+time+']</span> aditya@earth:~$ <span class="cmd">'+name+'</span> :: '+action+' <span class="ok">['+a+' | '+b+']</span>  &&  <span class="cmd">'+name2+'</span> :: '+action2+' <span class="ok">['+a2+' | '+b2+']</span>';
+   stream.appendChild(line);
+   while(stream.children.length>70)stream.firstElementChild.remove();
+   setTimeout(addLine,260+Math.random()*420);
+ }
+ for(let i=0;i<58;i++) setTimeout(addLine,i*24);
 })();

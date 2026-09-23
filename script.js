@@ -297,3 +297,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   const type=()=>{ if(i<name.length){el.textContent+=name[i++];setTimeout(type,85);} };
   type();
 });
+
+
+/* Light / dark mode toggle */
+document.addEventListener('DOMContentLoaded',()=>{
+ const b=document.getElementById('theme-toggle'); if(!b)return;
+ const saved=localStorage.getItem('portfolio-theme'); if(saved==='light')document.body.classList.add('light-mode');
+ b.addEventListener('click',()=>{const light=document.body.classList.toggle('light-mode');localStorage.setItem('portfolio-theme',light?'light':'dark');});
+});

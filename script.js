@@ -247,8 +247,8 @@ document.getElementById('year').textContent=new Date().getFullYear();
    const time=new Date().toLocaleTimeString([], {hour12:false});
    line.innerHTML='<span class="num">['+time+']</span> <span class="cmd">'+name+'</span> :: '+action+' <span class="ok">['+a+' | '+b+']</span>';
    stream.appendChild(line);
-   while(stream.children.length>34)stream.firstElementChild.remove();
+   while(stream.children.length>120)stream.firstElementChild.remove();
    setTimeout(addLine,420+Math.random()*700);
  }
- for(let i=0;i<24;i++) setTimeout(addLine,i*75);
+ for(let i=0;i<96;i++) setTimeout(addLine,i*28);
 })();
